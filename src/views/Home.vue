@@ -1,8 +1,8 @@
 <template>
   <v-row>
-    <v-col cols="4" class="ma-0 pa-0">
+    <v-col cols="12" sm="4" class="ma-0 pa-0">
       <v-btn block @click="setBasePoint">
-        Set Tree Trunk
+        Click to Pick Trunk Location
       </v-btn>
       <v-expansion-panels class="elevation-0" tile accordion>
         <v-expansion-panel v-for="attribute of attributesList" :key="attribute.key">
@@ -37,13 +37,14 @@
       </v-expansion-panels>
     </v-col>
     <v-col class="ma-3">
-      <v-card width="100%" height="100%">
-        <div v-if="listeningForBasepoint" @mousedown="baseLineMouseDown" @mouseup="baseLineMouseUp">
+      <v-card width="100%" height="90vh">
+        <div v-if="listeningForBasepoint" @click="setTrunkClick">
           <v-overlay opacity=".2" absolute :value="listeningForBasepoint">
-            Click and drag to create trunk line
+            Select two locations
           </v-overlay>
         </div>
         <svg width="100%" height="100%">
+          <circle v-if="listeningForBasepoint && firstPointSet" :cx="lineStart.x" :cy="lineStart.y" r="10" stroke="black" stroke-width="3" fill="black" />
           <line v-for="(line, i) of lines" :key="i" :x1="line.start.x + basepoint.x" :y1="line.start.y + basepoint.y" :x2="line.end.x + basepoint.x" :y2="line.end.y + basepoint.y" :style="`stroke:${line.color};stroke-linecap:round;stroke-width:${line.width}`"></line>
         </svg>
       </v-card>
@@ -140,7 +141,8 @@ export default {
       },
       lineStart: { x: 300, y: 500 },
       lineEnd: { x: 300, y: 300 },
-      lines: []
+      lines: [],
+      firstPointSet: false
     }
   },
   created: function () {
@@ -171,18 +173,27 @@ export default {
     setBasePoint: function () {
       this.listeningForBasepoint = true
     },
-    baseLineMouseDown: function (e) {
-      this.lines = []
+    setTrunkClick: function (e) {
       const rect = e.target.getBoundingClientRect()
-      this.lineStart.x = e.clientX - rect.left
-      this.lineStart.y = e.clientY - rect.top
-    },
-    baseLineMouseUp: function (e) {
-      this.listeningForBasepoint = false
-      const rect = e.target.getBoundingClientRect()
-      this.lineEnd.x = e.clientX - rect.left
-      this.lineEnd.y = e.clientY - rect.top
-      this.renderTree()
+      if (this.firstPointSet) {
+        this.lineEnd.x = e.clientX - rect.left
+        this.lineEnd.y = e.clientY - rect.top
+
+        // force lower point to be lineStart
+        if (this.lineEnd.y > this.lineStart.y) {
+          const temp = { x: this.lineEnd.x, y: this.lineEnd.y }
+          this.lineEnd = this.lineStart
+          this.lineStart = temp
+        }
+        this.firstPointSet = false
+        this.listeningForBasepoint = false
+        this.renderTree()
+      } else {
+        this.lines = []
+        this.lineStart.x = e.clientX - rect.left
+        this.lineStart.y = e.clientY - rect.top
+        this.firstPointSet = true
+      }
     },
     marshalQuery: function () {
       let query = '?'

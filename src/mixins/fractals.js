@@ -5,6 +5,7 @@
 // at some point, make my lines decrees smoothly in width, if I can do that with svg...
 // make card scroll to fit tree
 // make mobile friendly
+//  I'll need to eliminate the click and drag to do that...
 
 export default {
   methods: {
