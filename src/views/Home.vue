@@ -4,7 +4,7 @@
       <v-btn block @click="setBasePoint">
         Set Tree Trunk
       </v-btn>
-      <v-expansion-panels class="elevation-0" multiple tile accordion>
+      <v-expansion-panels class="elevation-0" tile accordion>
         <v-expansion-panel v-for="attribute of attributesList" :key="attribute.key">
           <v-expansion-panel-header>
             {{ attribute.label }}
@@ -70,11 +70,6 @@ export default {
       snackbar: false,
       listeningForBasepoint: false,
       basepoint: { x: 0, y: 0 },
-      xmlns: 'http://www.w3.org/2000/svg',
-      svg: '',
-      min: 0,
-      max: 10,
-      range: [0, 10],
       attributesList: [
         {
           type: 'slider',
@@ -93,7 +88,7 @@ export default {
         {
           type: 'slider',
           label: 'Number of Recursions',
-          max: 10,
+          max: 12,
           min: 1,
           key: 'numRecursions'
         },
@@ -140,7 +135,7 @@ export default {
         numBranches: [2, 2],
         numRecursions: 6,
         branchLength: [60, 70],
-        numTrunkRecursions: 1,
+        numTrunkRecursions: 3,
         trunkDisplacement: [5, 10]
       },
       lineStart: { x: 300, y: 500 },
@@ -166,7 +161,6 @@ export default {
       )
       lines.push(...this.mandelbrot(startLine, this.values))
       if (lines.length > 30000) {
-        console.log(this.lines.length)
         this.snackbar = true
         return
       }
