@@ -81,7 +81,7 @@ export default {
         },
         {
           type: 'slider',
-          label: 'Leaf Multiplier',
+          label: 'Leaf Size',
           max: 100,
           min: 1,
           key: 'leafMultiplier'

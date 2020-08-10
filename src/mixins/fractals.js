@@ -4,8 +4,9 @@
 // at some point, make whole thing based on seed... would have to change rdm functions
 // at some point, make my lines decrees smoothly in width, if I can do that with svg...
 // make card scroll to fit tree
-// make mobile friendly
-//  I'll need to eliminate the click and drag to do that...
+//   don't think this is possible
+// move create trunk button
+// make create trunk not lag
 
 export default {
   methods: {
