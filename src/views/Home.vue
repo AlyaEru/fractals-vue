@@ -43,9 +43,11 @@
             Select two locations
           </v-overlay>
         </div>
-        <svg width="100%" height="100%">
-          <circle v-if="listeningForBasepoint && firstPointSet" :cx="lineStart.x" :cy="lineStart.y" r="10" stroke="black" stroke-width="3" fill="black" />
+        <svg width="100%" height="100%" v-if="!listeningForBasepoint">
           <line v-for="(line, i) of lines" :key="i" :x1="line.start.x + basepoint.x" :y1="line.start.y + basepoint.y" :x2="line.end.x + basepoint.x" :y2="line.end.y + basepoint.y" :style="`stroke:${line.color};stroke-linecap:round;stroke-width:${line.width}`"></line>
+        </svg>
+        <svg width="100%" height="100%"  v-if="listeningForBasepoint && firstPointSet">
+          <circle :cx="lineStart.x" :cy="lineStart.y" r="10" stroke="black" stroke-width="3" fill="black" />
         </svg>
       </v-card>
     </v-col>
@@ -187,7 +189,7 @@ export default {
         }
         this.firstPointSet = false
         this.listeningForBasepoint = false
-        this.renderTree()
+        setTimeout(this.renderTree, 0) // lets dom re-render before trying to render tree
       } else {
         this.lines = []
         this.lineStart.x = e.clientX - rect.left
