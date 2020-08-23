@@ -1,73 +1,107 @@
 <template>
-  <v-row>
-    <v-col cols="12" sm="4" class="ma-0 pa-0">
-      <v-btn block @click="setBasePoint">
-        Click to Pick Trunk Location
-      </v-btn>
-      <v-expansion-panels class="elevation-0" tile accordion>
-        <v-expansion-panel v-for="attribute of attributesList" :key="attribute.key">
-          <v-expansion-panel-header>
-            {{ attribute.label }}
-            <div
-              class="font-weight-light ml-2"
-            >{{ attribute.type==='range' ? (values[attribute.key][0] + ' - ' + values[attribute.key][1]) : values[attribute.key] }}</div>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-range-slider
-              v-if="attribute.type==='range'"
-              v-model="values[attribute.key]"
-              :max="attribute.max"
-              :min="attribute.min"
-              @change="renderTree"
+  <div>
+    <v-row class="ma-0 pa-0">
+      <v-col cols="12" sm="2">
+        <div class="text-h4 mb-3">Tree Display</div>
+        <v-btn block large @click="setBasePoint" color="secondary" dark class="mb-3" >
+          Trunk Location
+        </v-btn>
+        <colorDialog @colorSet="setTrunkColor">
+          <template v-slot:activator="{ on, attrs }" >
+            <v-btn
+              block large :color="trunkColor" class="my-3"
+              dark
+              v-bind="attrs"
+              v-on="on"
             >
-              <template v-slot:prepend>{{ values[attribute.key][0] }}</template>
-              <template v-slot:append>{{ values[attribute.key][1] }}</template>
-            </v-range-slider>
-            <v-slider
-              v-else
-              v-model="values[attribute.key]"
-              :max="attribute.max"
-              :min="attribute.min"
-              @change="renderTree"
+              Trunk Color
+            </v-btn>
+          </template>
+        </colorDialog>
+        <colorDialog @colorSet="setLeafColor">
+          <template v-slot:activator="{ on, attrs }" >
+            <v-btn
+              block large :color="leafColor" class="my-3"
+              dark
+              v-bind="attrs"
+              v-on="on"
             >
-              <template v-slot:prepend>{{ values[attribute.key] }}</template>
-            </v-slider>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </v-col>
-    <v-col class="ma-3">
-      <v-card width="100%" height="90vh">
-        <div v-if="listeningForBasepoint" @click="setTrunkClick">
-          <v-overlay opacity=".2" absolute :value="listeningForBasepoint">
-            Select two locations
-          </v-overlay>
-        </div>
-        <svg width="100%" height="100%" v-if="!listeningForBasepoint">
-          <line v-for="(line, i) of lines" :key="i" :x1="line.start.x + basepoint.x" :y1="line.start.y + basepoint.y" :x2="line.end.x + basepoint.x" :y2="line.end.y + basepoint.y" :style="`stroke:${line.color};stroke-linecap:round;stroke-width:${line.width}`"></line>
-        </svg>
-        <svg width="100%" height="100%"  v-if="listeningForBasepoint && firstPointSet">
-          <circle :cx="lineStart.x" :cy="lineStart.y" r="10" stroke="black" stroke-width="3" fill="black" />
-        </svg>
-      </v-card>
-    </v-col>
-    <v-snackbar
-      v-model="snackbar"
-      :timeout="7000"
-      top
-      right
-      color="error"
-    >
-      Tree too large, try reducing the number of recursions or branches
-    </v-snackbar>
-  </v-row>
+              Leaf Color
+            </v-btn>
+          </template>
+        </colorDialog>
+      </v-col>
+      <v-col>
+        <v-card width="100%" height="95vh" outlined tile>
+          <div v-if="listeningForBasepoint" @click="setTrunkClick">
+            <v-overlay opacity=".2" absolute :value="listeningForBasepoint">
+              Select two locations
+            </v-overlay>
+          </div>
+          <svg width="100%" height="100%" v-if="!listeningForBasepoint">
+            <line v-for="(line, i) of lines" :key="i" :x1="line.start.x + basepoint.x" :y1="line.start.y + basepoint.y" :x2="line.end.x + basepoint.x" :y2="line.end.y + basepoint.y" :style="`stroke:${line.color};stroke-linecap:round;stroke-width:${line.width}`"></line>
+          </svg>
+          <svg width="100%" height="100%"  v-if="listeningForBasepoint && firstPointSet">
+            <circle :cx="lineStart.x" :cy="lineStart.y" r="10" stroke="black" stroke-width="3" fill="black" />
+          </svg>
+        </v-card>
+      </v-col>
+      <v-col cols="12" sm="3">
+        <div class="text-h4 mb-3">Tree Parameters</div>
+        <v-expansion-panels class="elevation-0" tile accordion>
+          <v-expansion-panel v-for="attribute of attributesList" :key="attribute.key">
+            <v-expansion-panel-header>
+              {{ attribute.label }}
+              <div
+                class="font-weight-light ml-2"
+              >{{ attribute.type==='range' ? (values[attribute.key][0] + ' - ' + values[attribute.key][1]) : values[attribute.key] }}</div>
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <v-range-slider
+                v-if="attribute.type==='range'"
+                v-model="values[attribute.key]"
+                :max="attribute.max"
+                :min="attribute.min"
+                @change="renderTree"
+              >
+                <template v-slot:prepend>{{ values[attribute.key][0] }}</template>
+                <template v-slot:append>{{ values[attribute.key][1] }}</template>
+              </v-range-slider>
+              <v-slider
+                v-else
+                v-model="values[attribute.key]"
+                :max="attribute.max"
+                :min="attribute.min"
+                @change="renderTree"
+              >
+                <template v-slot:prepend>{{ values[attribute.key] }}</template>
+              </v-slider>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-col>
+      <v-snackbar
+        v-model="snackbar"
+        :timeout="7000"
+        top
+        right
+        color="error"
+      >
+        Tree too large, try reducing the number of recursions or branches
+      </v-snackbar>
+    </v-row>
+  </div>
 </template>
 
 <script>
 import fractals from '../mixins/fractals'
+import colorDialog from '../components/ColorDialog'
 export default {
   name: 'Home',
   mixins: [fractals],
+  components: {
+    colorDialog
+  },
   data: function () {
     return {
       snackbar: false,
@@ -144,7 +178,9 @@ export default {
       lineStart: { x: 300, y: 500 },
       lineEnd: { x: 300, y: 300 },
       lines: [],
-      firstPointSet: false
+      firstPointSet: false,
+      trunkColor: '#99613D',
+      leafColor: '#59A800'
     }
   },
   created: function () {
@@ -152,16 +188,26 @@ export default {
     this.renderTree()
   },
   methods: {
-    renderTree: function (e) {
+    setTrunkColor: function (e) {
+      this.trunkColor = e
+      this.renderTree()
+    },
+    setLeafColor: function (e) {
+      this.leafColor = e
+      this.renderTree()
+    },
+    renderTree: function () {
       const startLine = {
         start: this.lineStart,
         end: this.lineEnd,
-        color: '#99613D',
+        color: this.trunkColor,
         width: this.values.trunkWidth
       }
       const lines = this.fractaltree(
         startLine,
-        this.values
+        this.values,
+        this.trunkColor,
+        this.leafColor
       )
       lines.push(...this.mandelbrot(startLine, this.values))
       if (lines.length > 30000) {
@@ -212,6 +258,8 @@ export default {
       query += ('&lineStarty=' + this.lineStart.y)
       query += ('&lineEndx=' + this.lineEnd.x)
       query += ('&lineEndy=' + this.lineEnd.y)
+      query += ('&trunkColor=' + encodeURIComponent(this.trunkColor))
+      query += ('&leafColor=' + encodeURIComponent(this.leafColor))
       return query
     },
     parseQuery: function () {
@@ -237,6 +285,12 @@ export default {
       }
       if (query.lineEndy) {
         this.lineEnd.y = Number(query.lineEndy)
+      }
+      if (query.leafColor) {
+        this.leafColor = query.leafColor
+      }
+      if (query.trunkColor) {
+        this.trunkColor = query.trunkColor
       }
     }
   }

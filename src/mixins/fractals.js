@@ -49,7 +49,7 @@ export default {
       return lines
     },
     // this should return an array of lines
-    fractaltree: function (line, params, iteration = 0, angle = 0) {
+    fractaltree: function (line, params, trunkColor, leafColor, iteration = 0, angle = 0) {
       const numBranches = this.intrdm(params.numBranches)
       const branches = []
       if (iteration < params.numRecursions) {
@@ -66,7 +66,7 @@ export default {
           const branchStart = line.end
 
           const endpt = { x: branchStart.x + (Math.sin(myAngle * Math.PI / 180) * limbLength), y: branchStart.y - (Math.cos(myAngle * Math.PI / 180) * limbLength) }
-          const color = iteration < params.numRecursions - 1 ? '#99613D' : '#59A800'
+          const color = iteration < params.numRecursions - 1 ? trunkColor : leafColor
 
           const lineSize = (line.width * (5 / 8 - (numBranches - 2) / 8)) * (iteration === params.numRecursions - 1 ? params.leafMultiplier : 1)// Number(Math.pow(Math.sqrt(numBranches),(11 - 2*numBranches - iteration))) //1.5 for 2 branches
 
@@ -77,7 +77,7 @@ export default {
             width: lineSize
           }
 
-          branches.push(...this.fractaltree(branch, params, iteration + 1, myAngle))
+          branches.push(...this.fractaltree(branch, params, trunkColor, leafColor, iteration + 1, myAngle))
           branches.push(...this.mandelbrot(branch, params))
         }
       }
