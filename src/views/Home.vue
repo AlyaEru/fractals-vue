@@ -62,19 +62,27 @@
                 v-model="values[attribute.key]"
                 :max="attribute.max"
                 :min="attribute.min"
+                :step="attribute.step || 1"
                 @change="renderTree"
               >
-                <template v-slot:prepend>{{ values[attribute.key][0] }}</template>
-                <template v-slot:append>{{ values[attribute.key][1] }}</template>
+                <template v-slot:prepend>
+                  <div class="number-label">{{ values[attribute.key][0] }}</div>
+                </template>
+                <template v-slot:append>
+                  <div class="number-label">{{ values[attribute.key][1] }}</div>
+                </template>
               </v-range-slider>
               <v-slider
                 v-else
                 v-model="values[attribute.key]"
                 :max="attribute.max"
                 :min="attribute.min"
+                :step="attribute.step || 1"
                 @change="renderTree"
               >
-                <template v-slot:prepend>{{ values[attribute.key] }}</template>
+                <template v-slot:prepend>
+                  <div class="number-label">{{ values[attribute.key] }}</div>
+                </template>
               </v-slider>
             </v-expansion-panel-content>
           </v-expansion-panel>
@@ -125,8 +133,9 @@ export default {
         {
           type: 'range',
           label: 'Leaf Size',
-          max: 50,
-          min: 1,
+          max: 25,
+          min: 0.5,
+          step: 0.5,
           key: 'leafSize'
         },
         {
@@ -181,7 +190,7 @@ export default {
       ],
       values: {
         trunkWidth: 25,
-        leafSize: [20, 25],
+        leafSize: [15, 20],
         branchAngle: [50, 70],
         numBranches: [2, 2],
         numRecursions: 6,
@@ -304,3 +313,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.number-label {
+  width: 1.3em;
+}
+</style>

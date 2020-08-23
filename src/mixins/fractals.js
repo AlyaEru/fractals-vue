@@ -9,7 +9,8 @@
 // rework branch angle so more variance is possible
 // variegated colors
 // number of recursions that are considered "leaf"
-// variable trunk width multiplier
+// leaf size: cap at 25, give smaller step size
+// investigate speeding up the svg rendering
 
 export default {
   methods: {
