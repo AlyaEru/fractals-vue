@@ -6,8 +6,6 @@
 // make card scroll to fit tree
 //   don't think this is possible
 // make create trunk not lag
-// missing branches, or 1 branch
-//  to make 1 branch work, I have to change how I do branch angle (not enough variance)
 // rework branch angle so more variance is possible
 // variegated colors
 // number of recursions that are considered "leaf"
@@ -75,8 +73,10 @@ export default {
           const endpt = { x: branchStart.x + (Math.sin(myAngle * Math.PI / 180) * limbLength), y: branchStart.y - (Math.cos(myAngle * Math.PI / 180) * limbLength) }
           const color = iteration < params.numRecursions - 1 ? trunkColor : leafColor
 
-          const lineSize = (line.width * (5 / 8 - (numBranches - 2) / 8)) * (iteration === params.numRecursions - 1 ? params.leafMultiplier : 1)// Number(Math.pow(Math.sqrt(numBranches),(11 - 2*numBranches - iteration))) //1.5 for 2 branches
-
+          let lineSize = line.width * this.rdm(params.branchWidth) / 100
+          if (iteration === params.numRecursions - 1) {
+            lineSize = this.rdm(params.leafSize)
+          }
           const branch = {
             start: branchStart,
             end: endpt,

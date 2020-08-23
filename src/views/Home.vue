@@ -110,17 +110,24 @@ export default {
       attributesList: [
         {
           type: 'slider',
-          label: 'Trunk Width',
+          label: 'Trunk Thickness',
           max: 100,
           min: 1,
           key: 'trunkWidth'
         },
         {
-          type: 'slider',
-          label: 'Leaf Size',
+          type: 'range',
+          label: '% Branch Thickness',
           max: 100,
+          min: 25,
+          key: 'branchWidth'
+        },
+        {
+          type: 'range',
+          label: 'Leaf Size',
+          max: 50,
           min: 1,
-          key: 'leafMultiplier'
+          key: 'leafSize'
         },
         {
           type: 'slider',
@@ -140,7 +147,7 @@ export default {
           type: 'range',
           label: 'Number of Branches',
           max: 5,
-          min: 1,
+          min: 2,
           key: 'numBranches'
         },
         {
@@ -174,14 +181,15 @@ export default {
       ],
       values: {
         trunkWidth: 25,
-        leafMultiplier: 24,
+        leafSize: [20, 25],
         branchAngle: [50, 70],
         numBranches: [2, 2],
         numRecursions: 6,
         branchLength: [60, 70],
         numTrunkRecursions: 3,
         trunkDisplacement: [5, 10],
-        missingBranch: 0
+        missingBranch: 0,
+        branchWidth: [50, 70]
       },
       lineStart: { x: 300, y: 500 },
       lineEnd: { x: 300, y: 300 },
