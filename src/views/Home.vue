@@ -32,7 +32,7 @@
         </colorDialog>
       </v-col>
       <v-col>
-        <v-card width="100%" height="95vh" outlined tile>
+        <v-card width="100%" height="95vh" max-height="95vw" outlined tile>
           <div v-if="listeningForBasepoint" @click="setTrunkClick">
             <v-overlay opacity=".2" absolute :value="listeningForBasepoint">
               Select two locations
