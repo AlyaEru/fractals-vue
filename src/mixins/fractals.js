@@ -5,8 +5,13 @@
 // at some point, make my lines decrees smoothly in width, if I can do that with svg...
 // make card scroll to fit tree
 //   don't think this is possible
-// move create trunk button
 // make create trunk not lag
+// missing branches, or 1 branch
+//  to make 1 branch work, I have to change how I do branch angle (not enough variance)
+// rework branch angle so more variance is possible
+// variegated colors
+// number of recursions that are considered "leaf"
+// variable trunk width multiplier
 
 export default {
   methods: {
@@ -53,13 +58,15 @@ export default {
       const numBranches = this.intrdm(params.numBranches)
       const branches = []
       if (iteration < params.numRecursions) {
-        // const offsetBranch = Math.floor(this.rdm([0, numBranches])) // make this an array, randomize
         for (let i = 0; i < numBranches; i++) {
+          if (Math.random() < (params.missingBranch / 100)) {
+            continue
+          }
           const divergeAngle = this.rdm(params.branchAngle)
 
           const limbLength = this.distance(line.start, line.end) * this.rdm(params.branchLength) / 100
           const midAngleRange = (params.branchAngle[1] - params.branchAngle[0]) / 2 + params.branchAngle[0]
-          const branchOffset = (i * 2 / (numBranches - 1)) * midAngleRange
+          const branchOffset = (numBranches > 1) ? (i * 2 / (numBranches - 1)) * midAngleRange : midAngleRange
           const myAngle = angle + divergeAngle - branchOffset
 
           // figuring out the coordinates for the end of the branch

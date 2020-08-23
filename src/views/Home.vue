@@ -140,7 +140,7 @@ export default {
           type: 'range',
           label: 'Number of Branches',
           max: 5,
-          min: 2,
+          min: 1,
           key: 'numBranches'
         },
         {
@@ -163,6 +163,13 @@ export default {
           max: 15,
           min: 0,
           key: 'trunkDisplacement'
+        },
+        {
+          type: 'slider',
+          label: '% Chance of Missing Branch',
+          max: 50,
+          min: 0,
+          key: 'missingBranch'
         }
       ],
       values: {
@@ -173,7 +180,8 @@ export default {
         numRecursions: 6,
         branchLength: [60, 70],
         numTrunkRecursions: 3,
-        trunkDisplacement: [5, 10]
+        trunkDisplacement: [5, 10],
+        missingBranch: 0
       },
       lineStart: { x: 300, y: 500 },
       lineEnd: { x: 300, y: 300 },
