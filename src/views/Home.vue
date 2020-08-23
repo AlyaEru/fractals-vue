@@ -6,7 +6,7 @@
         <v-btn block large @click="setBasePoint" color="secondary" dark class="mb-3" >
           Trunk Location
         </v-btn>
-        <colorDialog @colorSet="setTrunkColor">
+        <colorDialog @input="renderTree" v-model="trunkColor">
           <template v-slot:activator="{ on, attrs }" >
             <v-btn
               block large :color="trunkColor" class="my-3"
@@ -18,7 +18,7 @@
             </v-btn>
           </template>
         </colorDialog>
-        <colorDialog @colorSet="setLeafColor">
+        <colorDialog @input="renderTree" v-model="leafColor">
           <template v-slot:activator="{ on, attrs }" >
             <v-btn
               block large :color="leafColor" class="my-3"
@@ -188,14 +188,6 @@ export default {
     this.renderTree()
   },
   methods: {
-    setTrunkColor: function (e) {
-      this.trunkColor = e
-      this.renderTree()
-    },
-    setLeafColor: function (e) {
-      this.leafColor = e
-      this.renderTree()
-    },
     renderTree: function () {
       const startLine = {
         start: this.lineStart,

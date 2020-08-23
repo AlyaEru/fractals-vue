@@ -5,7 +5,7 @@
       </slot>
     </template>
     <v-card>
-      <v-color-picker v-model="color">
+      <v-color-picker :value="value" @input="(e) => color=e">
       </v-color-picker>
       <v-card-actions>
         <v-btn block @click="setColor">Done</v-btn>
@@ -18,14 +18,19 @@
 export default {
   data: function () {
     return {
-      colorDialog: false,
-      color: ''
+      colorDialog: false
     }
+  },
+  props: {
+    value: String
+  },
+  created: function () {
+    this.color = this.value
   },
   methods: {
     setColor: function () {
       this.colorDialog = false
-      this.$emit('colorSet', this.color)
+      this.$emit('input', this.color)
     }
   }
 }
